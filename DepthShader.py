@@ -16,7 +16,10 @@
 =========================================================================
 '''
 
+
 import sys
+print(sys.argv)
+
 import vtk
 import vtk.test.Testing
 from vtk.util.misc import vtkGetDataRoot
@@ -33,10 +36,12 @@ sys.dont_write_bytecode = True
 vtk.vtkObjectFactory.SetAllEnableFlags(False, "vtkNrrdReader", "vtkPNrrdReader")
 
 dataRoot = vtkGetDataRoot()
-dataRoot = '/Users/pieper/vtk/VTKData'
 reader = vtk.vtkNrrdReader()
-reader.SetFileName("" + str(dataRoot) + "/Data/tooth.nhdr")
-reader.SetFileName("/Users/pieper/data/multivolume/Cardiac-resampled-cropped/00rc.nrrd")
+if len(sys.argv) > 1:
+    fileName = sys.argv[1]
+else:
+    fileName = "/Users/pieper/data/multivolume/Cardiac-resampled-cropped/00rc.nrrd"
+reader.SetFileName(fileName)
 reader.Update()
 
 volumeProperty = vtk.vtkVolumeProperty()
@@ -97,10 +102,10 @@ mapper.AddShaderReplacement(
     "\n      }",
     False
 )
-mapper.AddShaderReplacement(
-    vtk.vtkShader.Fragment,
-    "//VTK::RenderToImage::Exit",
-    True,
+
+# mapper.AddShaderReplacement( vtk.vtkShader.Fragment, "//VTK::RenderToImage::Exit", True, "fragOutput0 = vec4(1., 1., 0., 1.)", False);
+        
+mapper.AddShaderReplacement( vtk.vtkShader.Fragment, "//VTK::RenderToImage::Exit", True,
     """
     //VTK::RenderToImage::Exit
       if (l_opaqueFragPos == vec3(0.0))
@@ -119,6 +124,7 @@ mapper.AddShaderReplacement(
         float depthRatio = 0.5 * depthRange * depthValue.z + 0.5 * depthRange;
         float fullDepth = gl_DepthRange.far + gl_DepthRange.near;
         fragOutput0 = vec4( mix(colorStart, colorEnd, depthRatio) * depthRange, 1.0);
+        fragOutput0 = colorEnd;
         };
     """,
     False
