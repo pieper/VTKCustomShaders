@@ -1,6 +1,6 @@
-
-slicer.mrmlScene.Clear(0)
-loadScene('/Users/pieper/data/2018-06-28-Scene.mrb')
+if True:
+  slicer.mrmlScene.Clear(0)
+  loadScene('/Users/pieper/data/2018-06-28-Scene.mrb')
 
 layoutManager = slicer.app.layoutManager()
 renderWindow = layoutManager.threeDWidget(0).threeDView().renderWindow()
@@ -38,8 +38,8 @@ mapper.AddShaderReplacement(
         False)
 
 croppingImplShaderCode = """
-    vec4 fiducialTexCoord = in_inverseTextureDatasetMatrix[0] * in_inverseVolumeMatrix[0] * vec4(fiducial,1.0);
-    g_skip = length(g_dataPos - fiducialTexCoord.xyz) < 0.3;
+    vec4 texCoordRAS = in_volumeMatrix[0] * in_textureDatasetMatrix[0]  * vec4(g_dataPos, 1.);
+    g_skip = length(texCoordRAS.xyz - fiducial) < 50.;
 """
 
 mapper.AddShaderReplacement(
@@ -49,5 +49,5 @@ mapper.AddShaderReplacement(
         croppingImplShaderCode,
         False)
 
-rw.Render()
+renderWindow.Render()
 
