@@ -1,4 +1,10 @@
 
+# Note: this functionality is now a test in Slicer [ShaderProperty test](https://github.com/Slicer/Slicer/blob/master/Applications/SlicerApp/Testing/Python/ShaderProperties.py)
+
+## The information below and this repository are for historical purposes only.
+
+
+
 Example scripts for customizing VTK shading language.
 
 Developed at [NA-MIC Project Week in Las Palmas](https://github.com/NA-MIC/ProjectWeek/blob/master/PW28_2018_GranCanaria/Projects/MultiVolumeRendering/README.md)
